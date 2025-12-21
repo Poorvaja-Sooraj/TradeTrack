@@ -4,11 +4,12 @@ import {
   getAllBills,
   getBillById
 } from "../controllers/bill.controller.js";
+import { verifyToken } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/", createBill);
-router.get("/", getAllBills);
-router.get("/:id", getBillById);
+router.post("/", verifyToken, createBill);
+router.get("/", verifyToken, getAllBills);
+router.get("/:id", verifyToken, getBillById);
 
 export default router;
