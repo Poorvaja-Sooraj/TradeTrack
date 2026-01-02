@@ -30,12 +30,12 @@ const BillHistory = () => {
   };
 
   return (
-    <div>
+    <div className="bill-history-page">
       <h2>Bill History</h2>
 
       {message && <p>{message}</p>}
 
-      <table border="1" cellPadding="8">
+      <table className="bill-history-table">
         <thead>
           <tr>
             <th>Bill ID</th>

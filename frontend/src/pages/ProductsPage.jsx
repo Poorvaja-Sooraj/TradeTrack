@@ -1,44 +1,104 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import {
+  fetchExpiryWarnings,
+  fetchLowStockWarnings
+} from "../services/notificationService";
 
 function ProductsPage() {
   const [products, setProducts] = useState([]);
-
   const [name, setName] = useState("");
+  const [barcode, setBarcode] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
   const [editingId, setEditingId] = useState(null);
 
-  // Load all products
+  const [expiryWarnings, setExpiryWarnings] = useState([]);
+  const [lowStockWarnings, setLowStockWarnings] = useState([]);
+
+  // Load products
   const loadProducts = async () => {
     try {
       const res = await api.get("/products");
-
-      // Works for both:
-      // { success: true, data: [...] }
-      // or just [...]
-      setProducts(res.data.data || res.data);
-    } catch (err) {
-      console.error("Failed to load products", err);
-      alert("Unable to load products. Are you logged in?");
+      const data = res.data.data || res.data;
+      data.sort((a, b) => a.name.localeCompare(b.name));
+      setProducts(data);
+    } catch {
+      alert("Failed to load products");
     }
   };
 
-  useEffect(() => {
-    loadProducts();
-  }, []);
+  const loadWarnings = async (currentProducts) => {
+  try {
+    const e = await fetchExpiryWarnings();
+    const l = await fetchLowStockWarnings();
 
-  // Add or Update product
+    // Get existing product names (lowercase for safe match)
+    const productNames = currentProducts.map(p =>
+      p.name.toLowerCase()
+    );
+
+    /* FILTER + SORT expiry warnings */
+    const sortedExpiry = (e.warnings || [])
+      .filter(w =>
+        productNames.some(name =>
+          w.toLowerCase().includes(name)
+        )
+      )
+      .sort((a, b) => {
+        const daysA = parseInt(a.match(/\d+/)?.[0] || 0);
+        const daysB = parseInt(b.match(/\d+/)?.[0] || 0);
+        return daysA - daysB;
+      });
+
+    /* FILTER + SORT low stock warnings */
+    const sortedLowStock = (l.warnings || [])
+      .filter(w =>
+        productNames.some(name =>
+          w.toLowerCase().includes(name)
+        )
+      )
+      .sort((a, b) => {
+        const stockA = parseInt(a.match(/\d+/)?.[0] || 0);
+        const stockB = parseInt(b.match(/\d+/)?.[0] || 0);
+        return stockA - stockB;
+      });
+
+    setExpiryWarnings(sortedExpiry);
+    setLowStockWarnings(sortedLowStock);
+  } catch {}
+};
+
+useEffect(() => {
+  const init = async () => {
+    const res = await api.get("/products");
+    const data = res.data.data || res.data || [];
+
+    data.sort((a, b) => a.name.localeCompare(b.name));
+    setProducts(data);
+
+    // IMPORTANT: load warnings AFTER products
+    loadWarnings(data);
+  };
+
+  init();
+}, []);
+
+
+  // Add / Update
   const handleSubmit = async () => {
     if (!name || !price || !stock) {
-      alert("All fields are required");
+      alert("Name, price, and stock are required");
       return;
     }
 
     const payload = {
       name,
+      barcode: barcode || null,
       price: Number(price),
-      stock_quantity: Number(stock)
+      stock_quantity: Number(stock),
+      expiry_date: expiryDate || null
     };
 
     try {
@@ -47,108 +107,128 @@ function ProductsPage() {
       } else {
         await api.post("/products", payload);
       }
-
-      loadProducts();
       resetForm();
+      loadProducts();
+      loadWarnings();
     } catch (err) {
       alert(err.response?.data?.message || "Operation failed");
     }
   };
 
-  // Reset form
   const resetForm = () => {
     setName("");
+    setBarcode("");
     setPrice("");
     setStock("");
+    setExpiryDate("");
     setEditingId(null);
   };
 
-  // Edit product
-  const handleEdit = (product) => {
-    setName(product.name);
-    setPrice(product.price);
-    setStock(product.stock_quantity);
-    setEditingId(product.id);
+  const handleEdit = (p) => {
+    setName(p.name);
+    setBarcode(p.barcode || "");
+    setPrice(p.price);
+    setStock(p.stock_quantity);
+    setExpiryDate(p.expiry_date || "");
+    setEditingId(p.id);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Delete product
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this product?"
-    );
-
-    if (!confirmDelete) return;
-
-    try {
-      await api.delete(`/products/${id}`);
-      loadProducts();
-    } catch (err) {
-      alert(err.response?.data?.message || "Delete failed");
-    }
+    if (!window.confirm("Delete this product?")) return;
+    await api.delete(`/products/${id}`);
+    loadProducts();
+    loadWarnings();
   };
 
   return (
-    <div>
-      <h2>Products</h2>
+    <div className="products-page">
+      {/* ADD PRODUCT */}
+      <section className="add-product-card">
+        <h2>{editingId ? "Update Product" : "Add Product"}</h2>
 
-      {/* Product Form */}
-      <div>
-        <input
-          placeholder="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <div className="form-grid">
+          <div className="form-field">
+            <label>Product Name</label>
+            <input value={name} onChange={e => setName(e.target.value)} />
+          </div>
 
-        <input
-          type="number"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
+          <div className="form-field">
+            <label>Product ID</label>
+            <input value={barcode} onChange={e => setBarcode(e.target.value)} />
+          </div>
 
-        <input
-          type="number"
-          placeholder="Stock"
-          value={stock}
-          onChange={(e) => setStock(e.target.value)}
-        />
+          <div className="form-field">
+            <label>Price (₹)</label>
+            <input type="number" value={price} onChange={e => setPrice(e.target.value)} />
+          </div>
 
-        <button onClick={handleSubmit}>
-          {editingId ? "Update Product" : "Add Product"}
-        </button>
+          <div className="form-field">
+            <label>Stock</label>
+            <input type="number" value={stock} onChange={e => setStock(e.target.value)} />
+          </div>
 
-        {editingId && (
-          <button onClick={resetForm}>Cancel</button>
-        )}
-      </div>
+          <div className="form-field">
+            <label>Expiry Date</label>
+            <input type="date" value={expiryDate} onChange={e => setExpiryDate(e.target.value)} />
+          </div>
+        </div>
 
-      <br />
 
-      {/* Products Table */}
-      <table border="1" cellPadding="8">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Action</th>
-          </tr>
-        </thead>
+        <div className="form-actions">
+          <button className="primary" onClick={handleSubmit}>
+            {editingId ? "Update Product" : "Add Product"}
+          </button>
+          {editingId && (
+            <button className="secondary" onClick={resetForm}>
+              Cancel
+            </button>
+          )}
+        </div>
+      </section>
 
-        <tbody>
-          {products.map((p) => (
-            <tr key={p.id}>
-              <td>{p.name}</td>
-              <td>{p.price}</td>
-              <td>{p.stock_quantity}</td>
-              <td>
-                <button onClick={() => handleEdit(p)}>Edit</button>
-                <button onClick={() => handleDelete(p.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* ALERTS */}
+      <section className="alerts-row">
+        <div className="alert-card expiry">
+          <h3>Expiry Alerts</h3>
+          {expiryWarnings.length === 0 ? (
+            <p>No expiry issues</p>
+          ) : (
+            <ul>
+              {expiryWarnings.map((w, i) => <li key={i}>{w}</li>)}
+            </ul>
+          )}
+        </div>
+
+        <div className="alert-card low-stock">
+          <h3>Low Stock Alerts</h3>
+          {lowStockWarnings.length === 0 ? (
+            <p>No low stock</p>
+          ) : (
+            <ul>
+              {lowStockWarnings.map((w, i) => <li key={i}>{w}</li>)}
+            </ul>
+          )}
+        </div>
+      </section>
+
+      {/* PRODUCT GRID */}
+      <section className="product-grid">
+        {products.map(p => (
+          <div key={p.id} className="product-card">
+            <h4>{p.name}</h4>
+            <p className="muted">{p.barcode || "-"}</p>
+            <p>₹ {p.price}</p>
+            <p>Stock: {p.stock_quantity}</p>
+            {p.expiry_date && <p>Expiry: {p.expiry_date}</p>}
+
+            <div className="card-actions">
+              <button className="edit" onClick={() => handleEdit(p)}>Edit</button>
+              <button className="delete" onClick={() => handleDelete(p.id)}>Delete</button>
+            </div>
+          </div>
+        ))}
+      </section>
     </div>
   );
 }

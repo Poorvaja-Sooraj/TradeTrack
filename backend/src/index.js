@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth.routes.js";
 import healthRoute from "./routes/health.js";
 import productRoutes from "./routes/product.routes.js";
 import billRoutes from "./routes/bill.routes.js";
+import notificationRoutes from "./routes/notification.routes.js";
 
 
 dotenv.config();
@@ -20,6 +21,7 @@ app.use("/auth", authRoutes);
 app.use("/health", healthRoute);
 app.use("/products", productRoutes);
 app.use("/bills", billRoutes);
+app.use("/notifications", notificationRoutes);
 
 
 app.listen(5000, () => {

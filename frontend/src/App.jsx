@@ -1,48 +1,56 @@
-import { useState } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+
 import ProductsPage from "./pages/ProductsPage";
 import Billing from "./pages/Billing";
 import BillHistory from "./pages/BillHistory";
 import Login from "./pages/login";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+import Layout from "./components/Layout";
+
 function App() {
-  const [isAuth, setIsAuth] = useState(
-    !!localStorage.getItem("token")
-  );
-
-  const [page, setPage] = useState("products");
-
-  if (!isAuth) {
-    return <Login setIsAuth={setIsAuth} />;
-  }
-
   return (
-    <div>
-      <h1>TradeTrack</h1>
+    <Routes>
+      {/* PUBLIC ROUTE */}
+      <Route path="/login" element={<Login />} />
 
-      <nav>
-        <button onClick={() => setPage("products")}>
-          Products
-        </button>
-        <button onClick={() => setPage("billing")}>
-          Billing
-        </button>
-        <button onClick={() => setPage("history")}>
-          Bill History
-        </button>
-        <button
-          onClick={() => {
-            localStorage.removeItem("token");
-            location.reload();
-          }}
-        >
-          Logout
-        </button>
-      </nav>
+      {/* PROTECTED ROUTES */}
+      <Route
+        path="/products"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ProductsPage />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
 
-      {page === "products" && <ProductsPage />}
-      {page === "billing" && <Billing />}
-      {page === "history" && <BillHistory />}
-    </div>
+      <Route
+        path="/billing"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Billing />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/bills"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <BillHistory />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* FALLBACK */}
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
   );
 }
 

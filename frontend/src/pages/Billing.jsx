@@ -13,7 +13,7 @@ const Billing = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Load products (AUTH SAFE)
+  // Load products
   useEffect(() => {
     api
       .get("/products")
@@ -92,102 +92,118 @@ const Billing = () => {
 
     try {
       await api.post("/bills", payload);
-
       setSuccessMsg("Bill created successfully");
       setBillItems([]);
       setMessage("");
     } catch (err) {
-      setMessage(
-        err.response?.data?.message || "Failed to create bill"
-      );
+      setMessage(err.response?.data?.message || "Failed to create bill");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
+    <div className="billing-page">
       <h2>Billing Screen</h2>
+      <br></br>
+      {/* Product Search */}
+      <div style={{ marginBottom: "16px" }}>
+        <input
+          type="text"
+          value={search}
+          placeholder="Search product"
+          onChange={(e) => {
+            setSearch(e.target.value);
+            setSelectedProduct(null);
+          }}
+        />
 
-      <input
-        type="text"
-        value={search}
-        placeholder="Search product"
-        onChange={(e) => {
-          setSearch(e.target.value);
-          setSelectedProduct(null);
-        }}
-      />
+        {search && !selectedProduct && (
+          <ul style={{ border: "1px solid #ccc", padding: "4px" }}>
+            {products
+              .filter((p) =>
+                p.name.toLowerCase().includes(search.toLowerCase())
+              )
+              .map((p) => (
+                <li
+                  key={p.id}
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    setSelectedProduct(p);
+                    setSearch(p.name);
+                  }}
+                >
+                  {p.name}
+                </li>
+              ))}
+          </ul>
+        )}
+      </div>
 
-      {search && !selectedProduct && (
-        <ul style={{ border: "1px solid #ccc", padding: "4px" }}>
-          {products
-            .filter((p) =>
-              p.name.toLowerCase().includes(search.toLowerCase())
-            )
-            .map((p) => (
-              <li
-                key={p.id}
-                style={{ cursor: "pointer" }}
-                onClick={() => {
-                  setSelectedProduct(p);
-                  setSearch(p.name);
-                }}
-              >
-                {p.name}
-              </li>
-            ))}
-        </ul>
-      )}
+      {/* Quantity + Add */}
+      <div style={{ marginBottom: "16px" }}>
+        <input
+          type="number"
+          min="1"
+          value={quantity}
+          onChange={(e) => setQuantity(Number(e.target.value))}
+        />
+        <br></br>
+        <br></br>
+        <button style={{ marginRight: "8px" }} onClick={addToBill}>
+            Add to Bill
+        </button>
+      </div>
 
-      <input
-        type="number"
-        min="1"
-        value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
-      />
-
-      <button onClick={addToBill}>Add to Bill</button>
-
-      <table border="1" cellPadding="6">
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Qty</th>
-            <th>Price</th>
-            <th>Subtotal</th>
-          </tr>
-        </thead>
-        <tbody>
-          {billItems.map((item, index) => (
-            <tr key={index}>
-              <td>{item.name}</td>
-              <td>{item.quantity}</td>
-              <td>{item.price}</td>
-              <td>{item.subtotal}</td>
+      {/* Bill Items Table */}
+      <div style={{ marginBottom: "16px" }}>
+        <table border="1" cellPadding="10" cellSpacing="0" width="100%">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Subtotal</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {billItems.map((item, index) => (
+              <tr key={index}>
+                <td>{item.name}</td>
+                <td>{item.quantity}</td>
+                <td>{item.price}</td>
+                <td>{item.subtotal}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-      <h3>
-        Total: ₹
-        {billItems.reduce((sum, item) => sum + item.subtotal, 0)}
-      </h3>
+      {/* Total */}
+      <div style={{ marginBottom: "16px" }}>
+        <h3>
+          Total: ₹
+          {billItems.reduce((sum, item) => sum + item.subtotal, 0)}
+        </h3>
+      </div>
 
-      <select
-        value={paymentMode}
-        onChange={(e) => setPaymentMode(e.target.value)}
-      >
-        <option value="CASH">Cash</option>
-        <option value="CARD">Card</option>
-        <option value="UPI">UPI</option>
-      </select>
+      {/* Payment + Create */}
+      <div style={{ marginBottom: "16px" }}>
+        <select
+          value={paymentMode}
+          onChange={(e) => setPaymentMode(e.target.value)}
+        >
+          <option value="CASH">Cash</option>
+          <option value="CARD">Card</option>
+          <option value="UPI">UPI</option>
+        </select>
 
-      <button disabled={loading} onClick={createBill}>
-        {loading ? "Creating..." : "Create Bill"}
-      </button>
+        <button disabled={loading} onClick={createBill}>
+          {loading ? "Creating..." : "Create Bill"}
+        </button>
+      </div>
 
+      {/* Messages */}
       {successMsg && <p>{successMsg}</p>}
       {message && <p>{message}</p>}
     </div>

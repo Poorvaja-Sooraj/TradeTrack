@@ -1,45 +1,59 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { AuthContext } from "../context/auth/AuthContext";
 
-function Login({ setIsAuth }) {
+function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const { setIsAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   const handleLogin = async () => {
     try {
       const res = await api.post("/auth/login", {
-        username,
-        password
+        username: username,
+        password: password,
       });
 
       localStorage.setItem("token", res.data.token);
-      setIsAuth(true);
+      setIsAuthenticated(true);
+      navigate("/products");
     } catch (err) {
       setError("Invalid username or password");
     }
   };
 
   return (
-    <div>
-      <h2>Shop Owner Login</h2>
+    <div className="login-page">
+      <div className="login-card">
+        <h2 className="login-title">Shop Owner Login</h2>
+        <p className="login-subtitle">TradeTrack Billing System</p>
 
-      <input
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
+        {error && <p className="login-error">{error}</p>}
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+        <input
+          className="login-input"
+          type="text"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
 
-      <button onClick={handleLogin}>Login</button>
+        <input
+          className="login-input"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-      {error && <p>{error}</p>}
+        <button className="login-button" onClick={handleLogin}>
+          Login
+        </button>
+      </div>
     </div>
   );
 }

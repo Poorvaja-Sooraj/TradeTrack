@@ -3,7 +3,7 @@ import { successResponse, errorResponse } from "../utils/response.js";
 
 export const createProduct = async (req, res) => {
   try {
-    const { name, price, stock_quantity, barcode } = req.body;
+    const { name, price, stock_quantity, barcode, expiry_date } = req.body;
 
     if (!name || price <= 0 || stock_quantity < 0) {
       return errorResponse(res, 400, "Invalid product data");
@@ -11,7 +11,7 @@ export const createProduct = async (req, res) => {
 
     const { data, error } = await supabase
       .from("products")
-      .insert([{ name, price, stock_quantity, barcode }])
+      .insert([{ name, price, stock_quantity, barcode, expiry_date }])
       .select()
       .single();
 
@@ -92,7 +92,7 @@ export const searchProducts = async (req, res) => {
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, price, stock_quantity, barcode } = req.body;
+    const { name, price, stock_quantity, barcode, expiry_date } = req.body;
 
     if (price !== undefined && price <= 0) {
       return errorResponse(res, 400, "Price must be greater than 0");
@@ -104,7 +104,7 @@ export const updateProduct = async (req, res) => {
 
     const { data, error } = await supabase
       .from("products")
-      .update({ name, price, stock_quantity, barcode })
+      .update({ name, price, stock_quantity, barcode, expiry_date })
       .eq("id", id)
       .eq("is_active", true)
       .select()
