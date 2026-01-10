@@ -1,6 +1,13 @@
 {
-  "outputDirectory": "dist",
   "routes": [
+    {
+      "src": "^/products(.*)",
+      "dest": "https://tradetrack-backend-x5mw.onrender.com/products$1"
+    },
+    {
+      "src": "^/api/(.*)",
+      "dest": "https://tradetrack-backend-x5mw.onrender.com/api/$1"
+    },
     {
       "src": "/(.*)",
       "dest": "/index.html"
