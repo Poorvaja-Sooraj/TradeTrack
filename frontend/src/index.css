@@ -1,36 +1,13 @@
 /* ========================================================= */
-/* GLOBAL BASE STYLES */
+/* GLOBAL BASE */
 /* ========================================================= */
 
 * {
   box-sizing: border-box;
 }
 
-.app-container {
-  max-width: 800px;   /* controls width */
-  margin: 0 auto;      /* centers layout */
-  padding: 20px;
-}
-
-.app-navbar {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  margin: 20px 0 30px 0;
-}
-
-.nav-link {
-  padding: 8px 18px;
-  border-radius: 8px;
-  font-size: 14px;
-}
-
-
-html, body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+html {
+  font-size: 16px; /* base reference */
 }
 
 body {
@@ -39,16 +16,51 @@ body {
   background: linear-gradient(#cfe9f7, #eaf6fd);
 }
 
-
 /* ========================================================= */
-/* PRODUCTS PAGE */
+/* APP CONTAINER */
 /* ========================================================= */
 
-.products-page {
-  padding: 24px;
-  font-size: 30px;
+.app-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
+/* ========================================================= */
+/* HEADER & NAVBAR */
+/* ========================================================= */
+
+h1 {
+  text-align: center;
+  font-size: 2rem; /* 32px */
+  font-weight: 800;
+  margin-bottom: 16px;
+}
+
+.app-navbar {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.nav-link {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: white;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link.active,
+.nav-link:hover {
+  background: #ff9933;
+  color: white;
+}
 
 /* ========================================================= */
 /* ADD PRODUCT CARD */
@@ -56,47 +68,52 @@ body {
 
 .add-product-card {
   background: white;
-  padding: 24px;
+  padding: 20px;
   border-radius: 12px;
   margin-bottom: 24px;
 }
 
-/* Form layout */
+.add-product-card h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+/* ========================================================= */
+/* FORM */
+/* ========================================================= */
+
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 12px;
 }
 
-/* Form action buttons */
-.form-actions {
-  margin-top: 16px;
-  display: flex;
-  gap: 12px;
+.form-field label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
-/* Primary button */
+.form-field input {
+  font-size: 0.95rem;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #9ca3af;
+}
+
 .primary {
   background: #ff9933;
   border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.95rem;
   color: white;
   cursor: pointer;
 }
 
-/* Secondary button */
-.secondary {
-  background: #e5e7eb;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-
 /* ========================================================= */
-/* ALERTS SECTION */
+/* ALERTS */
 /* ========================================================= */
 
 .alerts-row {
@@ -104,85 +121,76 @@ body {
   grid-template-columns: 1fr 1fr;
   gap: 16px;
   margin-bottom: 24px;
-  font-size: 30px;
 }
 
 .alert-card {
+  background: white;
   padding: 16px;
   border-radius: 10px;
-  background: #fff;
 }
 
 .alert-card h3 {
   margin-top: 0;
+  font-size: 1.1rem;
 }
 
-
 /* ========================================================= */
-/* PRODUCT GRID & CARDS */
+/* PRODUCT GRID */
 /* ========================================================= */
 
 .product-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 24px;
-  align-items: stretch;
+  gap: 20px;
 }
 
 .product-card {
   background: white;
   padding: 16px;
   border-radius: 12px;
-
+  border: 2px solid #ff9933;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-
-  width: 260px;
-  gap: 15px;
-  min-width: 280px;
-  max-width: 350px;
+  gap: 10px;
 }
 
 .product-card h4 {
+  font-size: 1.1rem;
   margin: 0;
 }
 
-/* Muted helper text */
-.muted {
-  color: #6b7280;
-  font-size: 14px;
+.product-card p {
+  font-size: 0.9rem;
 }
 
+.muted {
+  color: #6b7280;
+  font-size: 0.85rem;
+}
 
 /* ========================================================= */
-/* PRODUCT CARD ACTIONS */
+/* CARD ACTIONS */
 /* ========================================================= */
 
 .card-actions {
   display: flex;
   justify-content: space-between;
-  margin-top: 12px;
+  gap: 10px;
 }
 
-/* Edit button */
-.edit {
-  background: #3b82f6;
-  color: white;
-  border: none;
-  padding: 6px 12px;
+.card-actions button {
+  padding: 8px 14px;
+  font-size: 0.85rem;
   border-radius: 6px;
+  border: none;
+  cursor: pointer;
 }
 
-/* Delete button */
+.edit,
 .delete {
-  background: #ef4444;
+  background: #ff9933;
   color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
 }
-
 
 /* ========================================================= */
 /* LOGIN PAGE */
@@ -197,375 +205,41 @@ body {
 
 .login-card {
   background: white;
-  width: 1000px;
-  padding: 70px;
-  border-radius: 20px;
-  box-shadow: 0 60px 60px rgba(0, 0, 0, 0.15);
+  max-width: 420px;
+  width: 100%;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 40px 50px rgba(0, 0, 0, 0.15);
   text-align: center;
 }
 
-/* Login text */
 .login-title {
-  font-size: 60px;
-  margin-bottom: 10px;
-  margin-top: 5px;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
 }
 
 .login-subtitle {
-  font-size: 30px;
+  font-size: 1rem;
+  margin-bottom: 24px;
   color: #6b7280;
-  margin-bottom: 40px;
 }
 
-/* Inputs */
 .login-input {
-  width: 92%;
-  padding: 14px;
-  font-size: 40px;
-  margin-bottom: 18px;
+  width: 100%;
+  padding: 12px;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
   border-radius: 8px;
   border: 1px solid #d1d5db;
 }
 
-.login-input:focus {
-  outline: none;
-  border-color: #ff9933;
-}
-
-/* Login button */
 .login-button {
   width: 100%;
-  padding: 14px;
-  font-size: 30px;
-  background: #ff9933;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.login-button:hover {
-  background: #e88a25;
-}
-
-/* Error message */
-.login-error {
-  color: red;
-  margin-bottom: 16px;
-  font-size: 14px;
-}
-
-
-/* ========================================================= */
-/* ADD PRODUCT FORM DETAILS */
-/* ========================================================= */
-
-.add-product-card h2 {
-  text-align: center;
-  font-size: 60px;
-  font-weight: 700;
-  margin-bottom: 30px;
-}
-
-.add-product-card input {
-  font-size: 20px;
   padding: 12px;
-  text-decoration-color: black;
-}
-
-/* Form fields */
-.form-field {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-field label {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #374151;
-  font-style: normal;
-  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-}
-
-.form-field input {
-  font-size: 25px;
-  padding: 12px;
-  border-radius: 6px;
-  border: 1px solid #9ca3af;
-}
-
-/* Add button override */
-.add-product-card .primary {
-  font-size: 30px;
-  padding: 12px 26px;
-  border-radius: 8px;
-  font-weight: 600;
-}
-
-
-/* ========================================================= */
-/* NAVIGATION BAR */
-/* ========================================================= */
-
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  padding: 16px 24px;
-  margin-bottom: 24px;
-}
-
-nav a,
-nav button {
-  font-size: 30px;
-  padding: 20px 28px;
-  border-radius: 10px;
-  background: white;
+  font-size: 1rem;
+  background: #ff9933;
+  color: white;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
-  text-decoration: none;
-  color: black;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-}
-
-nav a:hover,
-nav button:hover {
-  background: #ff9933;
-  color: white;
-}
-
-/* Active link */
-.nav-link.active {
-  background: #ff9933;
-  color: white;
-  font-weight: 700;
-  box-shadow: 0 4px 12px rgba(255, 153, 51, 0.5);
-}
-
-
-/* ========================================================= */
-/* HEADINGS */
-/* ========================================================= */
-
-h1 {
-  text-align: center;
-  font-size: 60px;
-  font-weight: 900;
-  margin-bottom: 20px;
-}
-
-
-/* ========================================================= */
-/* PRODUCT CARD TEXT */
-/* ========================================================= */
-
-.product-card p {
-  font-size: 23px;
-}
-
-.product-card h4 {
-  font-size: 30px;
-  font-weight: 800;
-}
-
-
-/* ========================================================= */
-/* BILLING PAGE */
-/* ========================================================= */
-
-.billing-page {
-  font-size: 25px;
-}
-
-.billing-page h2,
-.billing-page h1 {
-  font-size: 60px;
-  font-weight: 700;
-  margin-bottom: 24px;
-}
-
-/* Buttons */
-.billing-page button {
-  font-size: 35px;
-  padding: 20px 26px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-/* Search dropdown list */
-.billing-page ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  border: 2px solid #9ca3af;
-  border-radius: 8px;
-  background: white;
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-.billing-page li {
-  font-size: 30px;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.billing-page li:last-child {
-  border-bottom: none;
-}
-
-.billing-page li:hover {
-  background: #ff9933;
-  color: white;
-}
-
-/* Inputs */
-.billing-page input {
-  font-size: 22px;
-  padding: 14px;
-  height: 50px;
-  border-radius: 8px;
-}
-
-/* Payment select */
-.billing-page select {
-  font-size: 40px;
-  padding: 20px 26px;
-  height: auto;
-  min-height: 50px;
-  border-radius: 8px;
-  margin-right: 60px;
-  line-height: 1.4;
-}
-
-/* Billing table */
-.billing-page table {
-  margin-top: 40px;
-  width: 50%;
-  border-collapse: collapse;
-}
-
-.billing-page h3 {
-  font-size: 36px;
-  font-weight: 900;
-  margin-top: 28px;
-}
-
-
-/* ========================================================= */
-/* BILL HISTORY PAGE */
-/* ========================================================= */
-
-.bill-history-page {
-  padding: 24px;
-}
-
-.bill-history-page h2 {
-  text-align: center;
-  font-size: 42px;
-  font-weight: 800;
-  margin-bottom: 30px;
-}
-
-.bill-history-table {
-  width: 80%;
-  margin: 0 auto;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-}
-
-.bill-history-table thead {
-  background: #ff9933;
-  color: white;
-}
-
-.bill-history-table th {
-  padding: 16px;
-  font-size: 20px;
-  text-align: center;
-  font-weight: 700;
-}
-
-.bill-history-table td {
-  padding: 14px;
-  font-size: 18px;
-  text-align: center;
-}
-
-.bill-history-table tbody tr:nth-child(even) {
-  background: #f9fafb;
-}
-
-.bill-history-table tbody tr:hover {
-  background: #fff7ed;
-}
-
-.bill-history-table td:nth-child(3) {
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-
-/* ========================================================= */
-/* FINAL SIZE & SAFETY FIXES */
-/* ========================================================= */
-
-/* Global box sizing */
-* {
-  box-sizing: border-box;
-}
-
-/* Fixed product grid */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 280px);
-  gap: 28px;
-  justify-content: start;
-  align-items: stretch;
-}
-
-/* Product card final styling */
-.product-card {
-  background: white;
-  padding: 20px;
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border: 2px solid #ff9933;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
-}
-
-/* Card buttons */
-.card-actions {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-}
-
-.card-actions button {
-  font-size: 18px;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-weight: 700;
-  border: none;
-  cursor: pointer;
-}
-
-/* Orange theme buttons */
-.edit,
-.delete {
-  background: #ff9933;
-  color: white;
-}
-
-.edit:hover,
-.delete:hover {
-  background: #e88a25;
 }
