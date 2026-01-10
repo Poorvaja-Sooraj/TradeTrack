@@ -7,7 +7,7 @@
 }
 
 .app-container {
-  max-width: 1000px;   /* controls width */
+  max-width: 800px;   /* controls width */
   margin: 0 auto;      /* centers layout */
   padding: 20px;
 }
