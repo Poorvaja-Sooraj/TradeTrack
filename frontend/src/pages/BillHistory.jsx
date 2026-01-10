@@ -4,6 +4,7 @@ import api from "../services/api";
 const BillHistory = () => {
   const [bills, setBills] = useState([]);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBills();
@@ -26,6 +27,8 @@ const BillHistory = () => {
         err.response?.data?.message ||
           "Access denied. Please login again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -33,29 +36,42 @@ const BillHistory = () => {
     <div className="bill-history-page">
       <h2>Bill History</h2>
 
-      {message && <p>{message}</p>}
+      {message && <p className="error-text">{message}</p>}
 
-      <table className="bill-history-table">
-        <thead>
-          <tr>
-            <th>Bill ID</th>
-            <th>Total</th>
-            <th>Payment</th>
-            <th>Date</th>
-          </tr>
-        </thead>
+      {loading ? (
+        <p>Loading bills...</p>
+      ) : bills.length === 0 ? (
+        <p>No bills found.</p>
+      ) : (
+        <div className="bill-history-wrapper">
+          <table className="bill-history-table">
+            <thead>
+              <tr>
+                <th>Bill ID</th>
+                <th>Total (₹)</th>
+                <th>Payment</th>
+                <th>Date</th>
+              </tr>
+            </thead>
 
-        <tbody>
-          {bills.map((bill) => (
-            <tr key={bill.id}>
-              <td>{bill.id.slice(-6).toUpperCase()}</td>
-              <td>{bill.total_amount}</td>
-              <td>{bill.payment_method || bill.payment_mode}</td>
-              <td>{new Date(bill.created_at).toLocaleString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+            <tbody>
+              {bills.map((bill) => (
+                <tr key={bill.id}>
+                  <td>{bill.id.slice(-6).toUpperCase()}</td>
+                  <td>{bill.total_amount}</td>
+                  <td>
+                    {(bill.payment_method || bill.payment_mode || "")
+                      .toUpperCase()}
+                  </td>
+                  <td>
+                    {new Date(bill.created_at).toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 };
