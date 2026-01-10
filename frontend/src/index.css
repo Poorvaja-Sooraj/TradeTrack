@@ -7,7 +7,7 @@
 }
 
 html {
-  font-size: 16px; /* base reference */
+  font-size: 16px;
 }
 
 body {
@@ -32,7 +32,7 @@ body {
 
 h1 {
   text-align: center;
-  font-size: 2rem; /* 32px */
+  font-size: 2rem;
   font-weight: 800;
   margin-bottom: 16px;
 }
@@ -66,23 +66,25 @@ h1 {
 /* ADD PRODUCT CARD */
 /* ========================================================= */
 
+.add-product-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 40px;
+}
+
 .add-product-card {
+  width: 100%;
+  max-width: 600px;
   background: white;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 24px;
+  padding: 32px;
+  border-radius: 18px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
 }
 
 .add-product-card h2 {
   text-align: center;
-  font-size: 1.5rem;
-  margin-bottom: 20px;
-}
-
-.add-product-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 32px;
+  font-size: 1.6rem;
+  margin-bottom: 24px;
 }
 
 /* ========================================================= */
@@ -91,30 +93,53 @@ h1 {
 
 .form-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 12px;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .form-field label {
+  width: 120px;
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  color: #374151;
 }
 
 .form-field input {
+  flex: 1;
+  padding: 10px 12px;
   font-size: 0.95rem;
-  padding: 10px;
-  border-radius: 6px;
+  border-radius: 8px;
   border: 1px solid #9ca3af;
+}
+
+.form-actions {
+  margin-top: 24px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
 }
 
 .primary {
   background: #ff9933;
   border: none;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 0.95rem;
+  padding: 12px 28px;
+  border-radius: 10px;
+  font-size: 1rem;
   color: white;
+  cursor: pointer;
+}
+
+.secondary {
+  background: #e5e7eb;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
@@ -132,7 +157,7 @@ h1 {
 .alert-card {
   background: white;
   padding: 16px;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .alert-card h3 {
@@ -199,6 +224,67 @@ h1 {
 }
 
 /* ========================================================= */
+/* BILL HISTORY */
+/* ========================================================= */
+
+.bill-history-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bill-history-page h2 {
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+}
+
+.bill-history-wrapper {
+  width: 100%;
+  max-width: 900px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.bill-history-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.bill-history-table thead {
+  background: #ff9933;
+  color: white;
+}
+
+.bill-history-table th {
+  padding: 14px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.bill-history-table td {
+  padding: 12px;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.bill-history-table tbody tr:nth-child(even) {
+  background: #f9fafb;
+}
+
+.bill-history-table tbody tr:hover {
+  background: #fff7ed;
+}
+
+.error-text {
+  color: red;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+/* ========================================================= */
 /* LOGIN PAGE */
 /* ========================================================= */
 
@@ -248,16 +334,4 @@ h1 {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-}
-
-.bill-history-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-}
-
-.error-text {
-  color: red;
-  text-align: center;
-  margin-bottom: 16px;
 }
